@@ -96,6 +96,7 @@ Install the requirements.txt
 ```
 pip install -r requirements.txt
 ```
+Start the ai server
 ```
 python src/app.py
 ```
@@ -109,7 +110,7 @@ Install the requirements.txt
 ```
 pip install -r requirements.txt
 ```
-Run Backend
+Run the Backend server
 ```
 npm run dev
 ```
