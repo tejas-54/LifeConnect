@@ -1,0 +1,52 @@
+{
+  "patientId": "DONOR_001",
+  "name": "Alice Johnson",
+  "age": 28,
+  "gender": "Female",
+  "bloodType": "O+",
+  "donorStatus": true,
+  "recipientStatus": false,
+  "organTypes": [
+    "heart",
+    "liver"
+  ],
+  "donorConsent": true,
+  "familyConsent": true,
+  "medicalHistory": {
+    "allergies": [
+      "None"
+    ],
+    "medications": [
+      "None"
+    ],
+    "surgeries": [
+      "Appendectomy - 2015"
+    ],
+    "chronicConditions": []
+  },
+  "organData": {
+    "availableOrgans": [
+      "heart",
+      "liver"
+    ],
+    "organHealth": {
+      "heart": "Excellent",
+      "liver": "Good"
+    }
+  },
+  "labResults": {
+    "bloodTests": {
+      "hemoglobin": "14.5 g/dL",
+      "whiteBloodCells": "7,200/\u03bcL",
+      "platelets": "250,000/\u03bcL"
+    },
+    "viralScreening": {
+      "hiv": "Negative",
+      "hepatitisB": "Negative",
+      "hepatitisC": "Negative"
+    }
+  },
+  "hospitalId": "HOSPITAL_001",
+  "hospitalName": "City General Hospital",
+  "doctorName": "Dr. Sarah Johnson, MD"
+}

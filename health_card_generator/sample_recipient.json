@@ -1,0 +1,31 @@
+{
+  "patientId": "RECIPIENT_001",
+  "name": "Bob Wilson",
+  "age": 42,
+  "gender": "Male",
+  "bloodType": "A+",
+  "donorStatus": false,
+  "recipientStatus": true,
+  "organData": {
+    "requiredOrgan": "heart",
+    "urgencyScore": 85
+  },
+  "medicalHistory": {
+    "allergies": [
+      "Penicillin"
+    ],
+    "medications": [
+      "Lisinopril",
+      "Metoprolol"
+    ],
+    "surgeries": [
+      "Cardiac catheterization - 2024"
+    ],
+    "chronicConditions": [
+      "Heart failure"
+    ]
+  },
+  "hospitalId": "HOSPITAL_002",
+  "hospitalName": "Metro Medical Center",
+  "doctorName": "Dr. Robert Williams, MD"
+}

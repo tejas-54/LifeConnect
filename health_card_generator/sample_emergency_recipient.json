@@ -1,0 +1,28 @@
+{
+  "patientId": "EMERGENCY_001",
+  "name": "Emma Davis",
+  "age": 8,
+  "gender": "Female",
+  "bloodType": "O-",
+  "donorStatus": false,
+  "recipientStatus": true,
+  "organData": {
+    "requiredOrgan": "liver",
+    "urgencyScore": 98
+  },
+  "medicalHistory": {
+    "allergies": [
+      "None"
+    ],
+    "medications": [
+      "Lactulose"
+    ],
+    "surgeries": [],
+    "chronicConditions": [
+      "Acute liver failure"
+    ]
+  },
+  "hospitalId": "HOSPITAL_003",
+  "hospitalName": "Children's Medical Center",
+  "doctorName": "Dr. Lisa Chang, MD"
+}
