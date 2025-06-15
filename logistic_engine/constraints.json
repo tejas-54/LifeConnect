@@ -1,0 +1,36 @@
+{
+  "transport_constraints": {
+    "max_transport_time_hours": {
+      "heart": 8,
+      "liver": 12,
+      "kidney": 24,
+      "lung": 8,
+      "pancreas": 12
+    },
+    "temperature_requirements": {
+      "heart": {"min": 3.0, "max": 5.0},
+      "liver": {"min": 3.0, "max": 5.0},
+      "kidney": {"min": 2.0, "max": 6.0},
+      "lung": {"min": 3.0, "max": 5.0},
+      "pancreas": {"min": 3.0, "max": 5.0}
+    },
+    "vehicle_preferences": {
+      "urgency_90_plus": ["medical_helicopter", "ambulance"],
+      "urgency_70_89": ["ambulance", "medical_van"],
+      "urgency_below_70": ["medical_van", "ambulance"]
+    }
+  },
+  "operational_constraints": {
+    "max_vehicles_per_route": 3,
+    "max_organs_per_vehicle": 4,
+    "required_buffer_time_minutes": 30,
+    "mandatory_checkpoints": true,
+    "real_time_tracking": true
+  },
+  "quality_requirements": {
+    "temperature_monitoring_interval_minutes": 15,
+    "gps_update_interval_minutes": 10,
+    "documentation_checkpoints": ["pickup", "transit", "delivery"],
+    "chain_of_custody_required": true
+  }
+}
