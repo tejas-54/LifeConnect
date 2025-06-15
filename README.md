@@ -84,29 +84,52 @@ npx hardhat run scripts/deploy.js --network localhost
 ```
 
 ### 3. AI Engine
-bash
-Copy
-Edit
+```
 cd ../ai_engine
+```
+Create a virtual environemnt
+```
 python -m venv venv
 venv\Scripts\activate  # Windows
+```
+Install the requirements.txt
+```
 pip install -r requirements.txt
+```
+```
 python src/app.py
-4. Backend API
-bash
-Copy
-Edit
+```
+
+### 4. Backend API
+
+```
 cd ../backend
+```
+Install the requirements.txt
+```
 pip install -r requirements.txt
+```
+Run Backend
+```
 npm run dev
-5. Frontend
-bash
-Copy
-Edit
+```
+### 5. Frontend
+```
 cd ../frontend
+```
+```
 set NODE_OPTIONS=--openssl-legacy-provider
+```
+Intialize and Install React app in frontend directory
+```
 npm install
+```
+Run the frontent react app
+```
 npm start
+```
+
+
 📄 License
 Licensed under the MIT License.
 
