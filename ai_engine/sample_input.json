@@ -1,0 +1,59 @@
+{
+  "donors": [
+    {
+      "id": "DONOR_001",
+      "name": "Alice Johnson",
+      "age": 35,
+      "bloodType": "O+",
+      "organType": "heart",
+      "healthStatus": "Excellent",
+      "hlaType": "A1,A2;B7,B8;C1,C7",
+      "medicalHistory": {
+        "surgeries": [],
+        "medications": [],
+        "allergies": ["None"]
+      }
+    },
+    {
+      "id": "DONOR_002",
+      "name": "Bob Smith", 
+      "age": 28,
+      "bloodType": "A-",
+      "organType": "kidney",
+      "healthStatus": "Good",
+      "hlaType": "A3,A11;B35,B44;C4,C16"
+    }
+  ],
+  "recipients": [
+    {
+      "id": "RECIPIENT_001",
+      "name": "Charlie Brown",
+      "age": 32,
+      "bloodType": "O+",
+      "requiredOrgan": "heart",
+      "urgencyScore": 95,
+      "condition": "Cardiomyopathy",
+      "waitingTime": 180
+    },
+    {
+      "id": "RECIPIENT_002",
+      "name": "Diana Prince",
+      "age": 29,
+      "bloodType": "A+", 
+      "requiredOrgan": "heart",
+      "urgencyScore": 78,
+      "condition": "Heart failure",
+      "waitingTime": 120
+    },
+    {
+      "id": "RECIPIENT_003",
+      "name": "Eva Davis",
+      "age": 45,
+      "bloodType": "A-",
+      "requiredOrgan": "kidney", 
+      "urgencyScore": 85,
+      "condition": "Chronic kidney disease",
+      "waitingTime": 200
+    }
+  ]
+}
