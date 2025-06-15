@@ -1,0 +1,85 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_donorAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getDonorInfo",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "donorAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "string",
+              "name": "fullName",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "age",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "bloodType",
+              "type": "string"
+            },
+            {
+              "internalType": "string[]",
+              "name": "organTypes",
+              "type": "string[]"
+            },
+            {
+              "internalType": "string",
+              "name": "healthCardCID",
+              "type": "string"
+            },
+            {
+              "internalType": "bool",
+              "name": "isActive",
+              "type": "bool"
+            },
+            {
+              "internalType": "bool",
+              "name": "consentGiven",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "registrationTimestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "accessRules",
+              "type": "string"
+            },
+            {
+              "internalType": "address",
+              "name": "emergencyContact",
+              "type": "address"
+            }
+          ],
+          "internalType": "struct DonorConsent.Donor",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ]
+}
