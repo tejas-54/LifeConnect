@@ -1,0 +1,20 @@
+{
+  "name": "lifeconnect-ipfs",
+  "version": "1.0.0",
+  "description": "LifeConnect IPFS Integration with Pinata",
+  "main": "upload_healthcard.js",
+  "scripts": {
+    "test": "node test_ipfs_integration.js",
+    "test-health": "node upload_healthcard.js test",
+    "upload-health": "node upload_healthcard.js upload",
+    "upload-transport": "node upload_transport_doc.js upload",
+    "demo": "node test_ipfs_integration.js"
+  },
+  "dependencies": {
+    "@pinata/sdk": "^2.1.0",
+    "dotenv": "^16.0.0"
+  },
+  "keywords": ["ipfs", "pinata", "blockchain", "healthcare", "organ-donation"],
+  "author": "LifeConnect Team",
+  "license": "MIT"
+}
