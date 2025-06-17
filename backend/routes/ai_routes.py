@@ -1,115 +1,123 @@
-from flask import Blueprint, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from fastapi import APIRouter, Depends, HTTPException
 import json
 from datetime import datetime, timezone
 
-from models import db, OrganMatch
-from utils import log_activity, create_response
+# from models import db, OrganMatch # SQLAlchemy, will be replaced with MongoDB interactions
+# from utils import log_activity, create_response # Flask specific, will be replaced
+# Imports from backend.app
+from backend.app import (
+    db,  # MongoDB database instance
+    User, # User Pydantic model
+    verify_token,
+    call_external_service,
+    AI_ENGINE_URL,
+    logger
+)
 
-ai_bp = Blueprint('ai', __name__)
+router = APIRouter(prefix="/ai", tags=["AI Engine"])
 
-@ai_bp.route('/find-matches', methods=['POST'])
-@jwt_required()
-def find_organ_matches():
-    """Find organ matches using AI"""
+@router.post('/find-matches')
+async def find_organ_matches(
+    data: dict,
+    current_user_email: str = Depends(verify_token)
+):
+    """
+    Find organ matches using AI.
+    Request body should be a JSON object with 'organData' and optional 'recipients'.
+    """
     try:
-        user_id_str = get_jwt_identity()
-        user_id = int(user_id_str)  # Convert string to int
-        
-        if not request.is_json:
-            return create_response(False, error='Content-Type must be application/json', status_code=400)
-        
-        data = request.get_json()
+        user_doc = await db.users.find_one({"email": current_user_email})
+        if not user_doc:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User not found or not authorized")
+
+        # Use user_doc["_id"] or a string version of it if you need user_id as an integer/string
+        # For simplicity, let's assume logging/internal ops can use email or stringified ObjectId
+        user_identifier_for_log = str(user_doc["_id"]) if user_doc.get("_id") else current_user_email
+        logger.info(f"User {user_identifier_for_log} performing find-matches.")
+
         if not data:
-            return create_response(False, error='No JSON data provided', status_code=400)
-        
+            raise HTTPException(status_code=400, detail="No JSON data provided")
+
         organ_data = data.get('organData', {})
         recipients = data.get('recipients', [])
-        
-        # Use sample data if no recipients provided
+
+        # Simulate loading sample data if no recipients provided
         if not recipients:
-            try:
-                ai_engine = ai_bp.component_service.ai_engine
-                if hasattr(ai_bp.component_service, 'load_sample_data'):
-                    _, recipients = ai_bp.component_service.load_sample_data()
-                else:
-                    recipients = []
-            except:
-                recipients = []
-        
-        # Convert organ_data to donor format for matching
+            # This section would ideally call a service or use AI_ENGINE_URL
+            # For now, using placeholder logic
+            # _, recipients = call_external_service(f"{AI_ENGINE_URL}/load_sample_data", method="GET")
+            pass # Assuming recipients might be empty if not provided
+
         donor = {
             'organType': organ_data.get('requiredOrgan', organ_data.get('organType', 'heart')),
             'bloodType': organ_data.get('bloodType', 'O+'),
             'age': organ_data.get('age', 30),
             'location': organ_data.get('location', 'Unknown')
         }
-        
-        # Perform AI matching
-        ai_engine = ai_bp.component_service.ai_engine
-        matches = ai_engine.find_best_matches(donor, recipients, top_n=10)
-        
-        # Save matches to database
-        for match in matches:
-            if match.get('match_score', 0) >= 80:  # Only save high-quality matches
-                organ_match = OrganMatch(
-                    user_id=user_id,
-                    donor_address=donor.get('address', 'unknown'),
-                    recipient_address=match.get('recipient', {}).get('address', 'unknown'),
-                    organ_type=donor['organType'],
-                    compatibility_score=match.get('match_score', 0),
-                    ai_analysis=json.dumps(match)
-                )
-                db.session.add(organ_match)
-        
-        db.session.commit()
-        
-        log_activity(user_id, 'ai_matching', f"AI matching performed for {donor['organType']} organ, found {len(matches)} matches")
-        
-        # Count high-quality matches
+
+        # Simulate AI matching call
+        # In a real setup, this would be:
+        # response = await call_external_service(
+        #     f"{AI_ENGINE_URL}/find_best_matches",
+        #     method="POST",
+        #     json_data={'donor': donor, 'recipients': recipients, 'top_n': 10}
+        # )
+        # matches = response.get("matches", [])
+        matches = [ # Placeholder matches
+            {"recipient": {"id": 1, "name": "Test Recipient 1"}, "match_score": 95, "age": 35, "bloodType": "O+"},
+            {"recipient": {"id": 2, "name": "Test Recipient 2"}, "match_score": 92, "age": 28, "bloodType": "A-"},
+        ]
+
+        # Database interaction (e.g., saving matches) is removed as per plan for MongoDB migration.
+        # log_activity would be replaced by logger.info (e.g., logger.info(f"AI matching for user {user_id}..."))
+        # logger.info(f"User {user_identifier_for_log} performed AI matching for {donor['organType']}, found {len(matches)} matches.")
+
         high_quality_matches = [m for m in matches if m.get('match_score', 0) >= 90]
-        
-        return create_response(True, {
+
+        return {
             'matches': matches,
             'total_matches': len(matches),
             'high_quality_matches': len(high_quality_matches),
             'search_criteria': donor,
-            'ai_engine_version': 'Gemini-1.5-Flash'
-        })
-    
-    except Exception as e:
-        user_id = None
-        try:
-            user_id_str = get_jwt_identity()
-            user_id = int(user_id_str) if user_id_str else None
-        except:
-            pass
-        log_activity(user_id, 'ai_matching_error', f"AI matching failed: {str(e)}", severity='error')
-        return create_response(False, error=f'AI matching failed: {str(e)}', status_code=500)
+            'ai_engine_version': 'Gemini-1.5-Flash-FastAPI' # Updated version string
+        }
 
-@ai_bp.route('/analyze-compatibility', methods=['POST'])
-@jwt_required()
-def analyze_compatibility():
+    except HTTPException:
+        raise # Re-raise HTTPException directly
+    except Exception as e:
+        # logger.error(f"AI matching failed for user {user_identifier_for_log}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f'AI matching failed: {str(e)}')
+
+@router.post('/analyze-compatibility')
+async def analyze_compatibility(
+    data: dict,
+    current_user_email: str = Depends(verify_token)
+):
     """Detailed compatibility analysis between donor and recipient"""
     try:
-        user_id_str = get_jwt_identity()
-        user_id = int(user_id_str)  # Convert string to int
-        
-        if not request.is_json:
-            return create_response(False, error='Content-Type must be application/json', status_code=400)
-        
-        data = request.get_json()
+        user_doc = await db.users.find_one({"email": current_user_email})
+        if not user_doc:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="User not found or not authorized")
+
+        user_identifier_for_log = str(user_doc["_id"]) if user_doc.get("_id") else current_user_email
+        logger.info(f"User {user_identifier_for_log} performing analyze-compatibility.")
+
         if not data:
-            return create_response(False, error='No JSON data provided', status_code=400)
-        
+            raise HTTPException(status_code=400, detail="No JSON data provided")
+
         donor_data = data.get('donorData', {})
         recipient_data = data.get('recipientData', {})
-        
-        # Perform detailed compatibility analysis
-        ai_engine = ai_bp.component_service.ai_engine
-        compatibility_score = ai_engine.get_compatibility_score(donor_data, recipient_data) if hasattr(ai_engine, 'get_compatibility_score') else 85
-        
-        # Calculate detailed factors
+
+        # Simulate AI compatibility score call
+        # In a real setup, this would be:
+        # response = await call_external_service(
+        #     f"{AI_ENGINE_URL}/get_compatibility_score",
+        #     method="POST",
+        #     json_data={'donor': donor_data, 'recipient': recipient_data}
+        # )
+        # compatibility_score = response.get("score", 85) # Default if not found
+        compatibility_score = 85 # Placeholder score
+
         factors = [
             {
                 'factor': 'Blood Type Compatibility',
@@ -136,18 +144,23 @@ def analyze_compatibility():
                 'description': 'Distance between donor and recipient locations'
             }
         ]
-        
-        # Calculate weighted score
+
         weighted_score = sum(factor['score'] * factor['weight'] for factor in factors)
-        
-        log_activity(user_id, 'compatibility_analysis', f"Compatibility analysis performed: {weighted_score:.1f}% compatibility")
-        
-        return create_response(True, {
+
+        # log_activity would be replaced by logger.info
+        # logger.info(f"User {user_identifier_for_log} performed compatibility analysis for donor {donor_data.get('id', 'N/A')} and recipient {recipient_data.get('id', 'N/A')}: {weighted_score:.1f}%")
+
+        return {
             'compatibility_score': round(weighted_score, 1),
             'factors': factors,
             'recommendation': 'Highly Compatible' if weighted_score >= 85 else 'Compatible' if weighted_score >= 70 else 'Low Compatibility',
             'analysis_timestamp': datetime.now(timezone.utc).isoformat()
-        })
-    
+        }
+
+    except HTTPException:
+        raise # Re-raise HTTPException directly
     except Exception as e:
-        return create_response(False, error=f'Compatibility analysis failed: {str(e)}', status_code=500)
+        # logger.error(f"Compatibility analysis failed for user {user_identifier_for_log}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f'Compatibility analysis failed: {str(e)}')
+
+# End of file

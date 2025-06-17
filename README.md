@@ -51,6 +51,28 @@ LifeConnect combines AI, Blockchain, and Geospatial logistics to ensure secure, 
 
 ---
 
+## ⚙️ Environment Configuration
+
+Before proceeding with the setup, you need to configure the environment variables for the application.
+
+1.  **Create an environment file:**
+    Copy the example environment file `.env.example` to a new file named `.env` in the project root directory:
+    ```bash
+    cp .env.example .env
+    ```
+
+2.  **Update environment variables:**
+    Open the `.env` file and review each variable. Update the values to match your local setup or deployment environment. This typically includes:
+    *   `SECRET_KEY` for JWT
+    *   `DATABASE_URL` for MongoDB connection
+    *   `FASTAPI_BACKEND_PORT` for the backend server
+    *   URLs for external services like AI Engine, Logistics Engine, Blockchain RPC, and IPFS.
+
+3.  **Important Security Note:**
+    The `.env` file contains sensitive information and **should not be committed to version control**. Ensure that `.env` is listed in your `.gitignore` file.
+
+---
+
 ## 🚀 Quick Setup
 
 ### 1. Clone the Repository

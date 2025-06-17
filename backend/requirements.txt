@@ -1,10 +1,12 @@
-flask==2.3.3
-flask-cors==4.0.0
-flask-sqlalchemy==3.0.5
-flask-jwt-extended==4.5.3
-flask-socketio==5.3.6
-requests==2.31.0
-python-dotenv==1.0.0
-python-socketio==5.9.0
-gevent==23.9.1
-gevent-websocket==0.10.1
+fastapi~=0.104.1
+uvicorn[standard]~=0.23.2
+motor~=3.3.2
+pydantic[email]~=2.5.0
+python-jose[cryptography]~=3.3.0
+passlib[bcrypt]~=1.7.4
+requests==2.31.0 # Keep for call_external_service
+python-dotenv==1.0.0 # Keep for environment variable loading
+# gevent and gevent-websocket might not be needed if not using Flask-SocketIO or specific async models that require them.
+# For now, keeping them commented out, can be removed if no longer necessary.
+# gevent==23.9.1
+# gevent-websocket==0.10.1
